@@ -13,7 +13,8 @@ RUN dnf install -y \
         ripgrep \
         sysstat \
         tig \
-    && dnf clean all
+    && dnf clean all \
+    && useradd --create-home --uid 1000 vscode
 
 COPY --from=uv /uv /uvx /usr/local/bin/
 
@@ -25,8 +26,11 @@ RUN gh release download "v${OPENCODE_VERSION}" \
         --output - \
     | tar -xz -C /usr/local/bin opencode
 
+RUN mkdir -p /opt/homelab && chown vscode:vscode /opt/homelab
+
+USER vscode
 WORKDIR /opt/homelab
-COPY pyproject.toml uv.lock ./
+COPY --chown=vscode:vscode pyproject.toml uv.lock ./
 RUN uv python install 3.14 \
     && uv sync --frozen --all-groups --no-install-project --python 3.14
 
