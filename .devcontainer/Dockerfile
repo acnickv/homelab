@@ -14,9 +14,15 @@ RUN dnf install -y \
         sysstat \
         tig \
     && dnf clean all \
-    && useradd --create-home --uid 1000 vscode
+    && useradd --create-home --uid 1000 vscode \
+    && mkdir -p /home/vscode/.local/bin \
+    && chown -R vscode:vscode /home/vscode/.local \
+    && mkdir -p /opt/homelab \
+    && chown vscode:vscode /opt/homelab
 
-COPY --from=uv /uv /uvx /usr/local/bin/
+COPY --from=uv --chown=vscode:vscode /uv /uvx /home/vscode/.local/bin/
+
+USER vscode
 
 # renovate: datasource=github-releases depName=sst/opencode versioning=semver
 ARG OPENCODE_VERSION=1.17.13
@@ -24,14 +30,11 @@ RUN gh release download "v${OPENCODE_VERSION}" \
         --repo sst/opencode \
         --pattern 'opencode-linux-x64.tar.gz' \
         --output - \
-    | tar -xz -C /usr/local/bin opencode
+    | tar -xz -C /home/vscode/.local/bin opencode
 
-RUN mkdir -p /opt/homelab && chown vscode:vscode /opt/homelab
-
-USER vscode
 WORKDIR /opt/homelab
 COPY --chown=vscode:vscode pyproject.toml uv.lock ./
 RUN uv python install 3.14 \
     && uv sync --frozen --all-groups --no-install-project --python 3.14
 
-ENV PATH="/opt/homelab/.venv/bin:$PATH"
+ENV PATH="/home/vscode/.local/bin:/opt/homelab/.venv/bin:$PATH"

@@ -10,8 +10,5 @@
     "vscode": {
       "extensions": []
     }
-  },
-  "remoteEnv": {
-    "PATH": "/opt/homelab/.venv/bin:${containerEnv:PATH}"
   }
 }
