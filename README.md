@@ -2,6 +2,8 @@
 
 Repository that stores all of the automation code required for running and managing my homelab environment.
 
+If your change touches `.devcontainer/` or devcontainer tool versions, read [`docs/devcontainer.md`](docs/devcontainer.md) first.
+
 This repository will contain code responsible for:
 
 * system maintenance
