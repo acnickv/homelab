@@ -1,0 +1,16 @@
+{
+  "name": "homelab",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
+  "features": {},
+  "customizations": {
+    "vscode": {
+      "extensions": []
+    }
+  },
+  "remoteEnv": {
+    "PATH": "/opt/homelab/.venv/bin:${containerEnv:PATH}"
+  }
+}
