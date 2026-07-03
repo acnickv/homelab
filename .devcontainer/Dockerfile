@@ -15,14 +15,12 @@ RUN dnf install -y \
         tig \
     && dnf clean all \
     && useradd --create-home --uid 1000 vscode \
-    && mkdir -p /home/vscode/.local/bin \
-    && chown -R vscode:vscode /home/vscode/.local \
     && mkdir -p /opt/homelab \
     && chown vscode:vscode /opt/homelab
 
-COPY --from=uv --chown=vscode:vscode /uv /uvx /home/vscode/.local/bin/
-
 USER vscode
+
+COPY --from=uv /uv /uvx /home/vscode/.local/bin/
 
 # renovate: datasource=github-releases depName=sst/opencode versioning=semver
 ARG OPENCODE_VERSION=1.17.13
