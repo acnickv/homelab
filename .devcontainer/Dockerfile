@@ -1,7 +1,10 @@
+FROM ghcr.io/astral-sh/uv:0.11.26@sha256:3d868e555f8f1dbc324afa005066cd11e1053fc4743b9808ca8025283e65efa5 AS uv
+
 FROM docker.io/library/fedora:44@sha256:6c75d5bf57cb0fa5aa4b92c6a83c86c791644496d9ac230de7711f5b8ec3b898
 
 RUN dnf install -y \
         curl \
+        gh \
         git-core \
         jq \
         neovim \
@@ -12,18 +15,14 @@ RUN dnf install -y \
         tig \
     && dnf clean all
 
-# renovate: datasource=pypi depName=uv versioning=pep440
-ARG UV_VERSION=0.11.26
-RUN curl -fsSL \
-        "https://github.com/astral-sh/uv/releases/download/${UV_VERSION}/uv-x86_64-unknown-linux-gnu.tar.gz" \
-    | tar -xz -C /usr/local/bin --strip-components=1 \
-        uv-x86_64-unknown-linux-gnu/uv \
-        uv-x86_64-unknown-linux-gnu/uvx
+COPY --from=uv /uv /uvx /usr/local/bin/
 
 # renovate: datasource=github-releases depName=sst/opencode versioning=semver
 ARG OPENCODE_VERSION=1.17.13
-RUN curl -fsSL \
-        "https://github.com/sst/opencode/releases/download/v${OPENCODE_VERSION}/opencode-linux-x64.tar.gz" \
+RUN gh release download "v${OPENCODE_VERSION}" \
+        --repo sst/opencode \
+        --pattern 'opencode-linux-x64.tar.gz' \
+        --output - \
     | tar -xz -C /usr/local/bin opencode
 
 WORKDIR /opt/homelab

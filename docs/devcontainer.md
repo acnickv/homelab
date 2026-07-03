@@ -21,6 +21,8 @@ This guide is for all contributors, including AI agents, when making changes to 
 The devcontainer toolset must include:
 
 **dnf-managed (no version pin required):**
+- `curl`
+- `gh` (GitHub CLI, used to download opencode release assets)
 - `git-core`
 - `jq`
 - `neovim` (`nvim`)
@@ -30,9 +32,11 @@ The devcontainer toolset must include:
 - `sysstat` (systems analysis)
 - `tig`
 
-**Binary installs (version-pinned, Renovate-managed):**
+**Container image copy (Renovate-managed via Dockerfile datasource):**
+- `uv` + `uvx` — copied from `ghcr.io/astral-sh/uv:<version>` multi-stage build stage
+
+**Downloaded via `gh release download` (version-pinned ARG, Renovate-managed):**
 - `opencode` — GitHub releases: `sst/opencode`
-- `uv` — PyPI: `uv`
 
 **Python packages via `uv` (version-pinned, Renovate-managed):**
 
