@@ -16,16 +16,41 @@ This guide is for all contributors, including AI agents, when making changes to 
 8. `ansible-core` must be pinned to `2.20`.
 9. Ansible collections/roles must be version-pinned.
 
-## Required Initial Tooling
+## Required Tooling
 
-The initial devcontainer toolset must include:
+The devcontainer toolset must include:
 
-- `ansible-core`
+**dnf-managed (no version pin required):**
+- `curl`
+- `gh` (GitHub CLI, used to download opencode release assets)
+- `git-core`
 - `jq`
-- `opencode`
-- `ripgrep`
-- `nvim`
+- `neovim` (`nvim`)
+- `podman`
+- `podman-docker` (docker compatibility layer for molecule)
+- `ripgrep` (`rg`)
+- `sysstat` (systems analysis)
+- `tig`
+
+**Container image copy (Renovate-managed via Dockerfile datasource):**
+- `uv` + `uvx` — copied from `ghcr.io/astral-sh/uv:<version>` multi-stage build stage
+
+**Downloaded via `gh release download` (version-pinned ARG, Renovate-managed):**
+- `opencode` — GitHub releases: `sst/opencode`
+
+**Python packages via `uv` (version-pinned, Renovate-managed):**
+
+Main dependencies (`pyproject.toml` `[project].dependencies`):
+- `ansible-core==2.20.*`
 - `prek`
+
+`lint` dependency group:
+- `ansible-lint`
+
+`test` dependency group:
+- `ansible-navigator`
+- `molecule`
+- `molecule-plugins[docker]`
 
 Additional tools can be added later, but must follow the same pinning and Renovate requirements.
 
