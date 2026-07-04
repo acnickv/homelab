@@ -18,6 +18,8 @@ This guide is for all contributors, including AI agents, when making changes to 
 
 ## Required Tooling
 
+The following section defines the initial baseline software required for the container. It does NOT require update every time a package is added to any of the defined tools.
+
 The devcontainer toolset must include:
 
 **dnf-managed (no version pin required):**
@@ -71,8 +73,8 @@ Do not use unpinned image references.
 
 ### 3) Python Toolchain
 
-- Install and use `uv`.
-- Install Python `3.14` through `uv`.
+- Leverage `uv` to manage packages
+- Regenerate `uv.lock` file when new packages are added to `pyproject.toml` using the command `uv lock`. The existing `uv.lock` file may require removal if the command fails.
 - Keep dependencies in `pyproject.toml` with separate groups:
   - `lint`
   - `test`
@@ -81,6 +83,8 @@ Do not use unpinned image references.
 
 - Pin `ansible-core==2.20.*` in Python dependencies.
 - Pin versions for all required Ansible collections and roles.
+- Leverage the `requirements.yml` file for tracking Ansible collections and roles.
+- Leverage `ansible-galaxy` for collection and role installation.
 
 ## Renovate Requirements
 
